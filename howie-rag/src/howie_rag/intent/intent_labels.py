@@ -1,0 +1,11 @@
+from enum import StrEnum
+
+
+class IntentLabel(StrEnum):
+    FACT = "FACT"
+    SUMMARY = "SUMMARY"
+    COMPARISON = "COMPARISON"
+    NAVIGATION = "NAVIGATION"
+    METHOD_CONTEXT = "METHOD_CONTEXT"
+    LIMITATION = "LIMITATION"
+    UNKNOWN = "UNKNOWN"
