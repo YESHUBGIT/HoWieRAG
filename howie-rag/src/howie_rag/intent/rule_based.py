@@ -91,6 +91,8 @@ class RuleBasedIntentClassifier(BaseIntentClassifier):
 
         for intent, keywords in self._KEYWORDS_BY_INTENT:
             for keyword in keywords:
+                if keyword == "sample" and "sample size" in normalized_question:
+                    continue
                 if keyword in normalized_question:
                     return IntentResult(
                         intent=intent.value,
