@@ -1,10 +1,12 @@
+from typing import List, Tuple
+
 from howie_rag.core.schemas import IntentResult
 from howie_rag.intent.base import BaseIntentClassifier
 from howie_rag.intent.intent_labels import IntentLabel
 
 
 class RuleBasedIntentClassifier(BaseIntentClassifier):
-    _KEYWORDS_BY_INTENT: list[tuple[IntentLabel, tuple[str, ...]]] = [
+    _KEYWORDS_BY_INTENT: List[Tuple[IntentLabel, Tuple[str, ...]]] = [
         (
             IntentLabel.COMPARISON,
             (

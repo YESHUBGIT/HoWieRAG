@@ -1,10 +1,12 @@
+from typing import Optional
+
 from pydantic import BaseModel, Field
 
 
 class IntentResult(BaseModel):
     intent: str
     confidence: float
-    reasoning: str | None = None
+    reasoning: Optional[str] = None
 
 
 class Document(BaseModel):

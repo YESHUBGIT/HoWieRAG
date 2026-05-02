@@ -1,7 +1,7 @@
-from enum import StrEnum
+from enum import Enum
 
 
-class IntentLabel(StrEnum):
+class IntentLabel(str, Enum):
     FACT = "FACT"
     SUMMARY = "SUMMARY"
     COMPARISON = "COMPARISON"
