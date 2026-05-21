@@ -282,7 +282,7 @@ Exports the minimal document-loading entrypoint.
 
 Implements the first ingestion step.
 
-This file currently loads `.txt` and `.md` files from a directory and converts them into `Document` objects.
+This file currently loads `.txt`, `.md`, and `.pdf` files from a directory and converts them into `Document` objects.
 
 For each supported file it creates:
 
@@ -290,6 +290,8 @@ For each supported file it creates:
 - `title`
 - `text`
 - `metadata`
+
+For PDF files, the current implementation performs minimal text extraction and inserts simple page markers such as `[Page 1]` when text is available.
 
 The metadata currently stores:
 
@@ -557,6 +559,7 @@ It currently checks:
 2. unsupported files are ignored
 3. document titles and metadata are populated correctly
 4. document IDs remain stable across repeated loads
+5. PDF files are accepted and their extracted text is loaded into `Document` objects
 
 ### `tests/test_text_chunker.py`
 

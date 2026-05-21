@@ -32,7 +32,7 @@ python scripts/evaluate_rule_based_intent.py intent_dataset/v3/howie_intent_data
 
 ## Step 2: Minimal document loading
 
-The next module loads `.txt` and `.md` files into `Document` objects so later stages can chunk and retrieve them.
+The next module loads `.txt`, `.md`, and `.pdf` files into `Document` objects so later stages can chunk and retrieve them.
 
 ## Step 3: Minimal chunking
 
