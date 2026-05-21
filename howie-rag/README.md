@@ -51,3 +51,18 @@ Example command:
 ```bash
 python scripts/run_simple_chatbot.py "What trend do we see in student mobility?" path/to/documents
 ```
+
+## Step 6: LLM-backed RAG answering
+
+The next module sends the retrieved context to a local vLLM server and generates a grounded answer.
+
+Environment variables:
+
+- `HOWIE_LLM_BASE_URL` defaults to `http://localhost:8000`
+- `HOWIE_LLM_MODEL` defaults to `Qwen/Qwen2.5-14B-Instruct`
+
+Example command:
+
+```bash
+python scripts/run_rag_chatbot.py "What trend do we see in student mobility?" path/to/documents
+```

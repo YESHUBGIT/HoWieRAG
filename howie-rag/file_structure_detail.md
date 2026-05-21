@@ -61,7 +61,7 @@ Expected future stages include:
 
 Not all of these parts exist yet. The repository is intentionally focused on building the pipeline one minimal stage at a time.
 
-The next implemented stages after intent classification are minimal document loading, minimal chunking, minimal retrieval, and a minimal end-to-end chatbot flow.
+The next implemented stages after intent classification are minimal document loading, minimal chunking, minimal retrieval, a minimal end-to-end chatbot flow, and a first LLM-backed RAG answer stage.
 
 The current system classifies a user question into one of these labels:
 
@@ -79,7 +79,7 @@ The current system classifies a user question into one of these labels:
 - `FOLLOWUP`
 - `UNKNOWN`
 
-The project does not yet include vector databases, LLM answering, API layers, or UI layers.
+The project does not yet include vector databases, API layers, or UI layers.
 
 ## How The Current Intent Classifier Works
 
@@ -374,6 +374,49 @@ It returns a `ChatbotResponse` containing:
 
 This is not yet a full answer-generation system. It is a working pipeline that shows how a user question moves through the first modular stages of the chatbot.
 
+### `src/howie_rag/llm/__init__.py`
+
+Exports the LLM client interfaces.
+
+### `src/howie_rag/llm/base.py`
+
+Defines the abstract LLM interface used by the app.
+
+This is what keeps the project modular. The rest of the pipeline can call a generic LLM client without depending directly on one specific backend.
+
+### `src/howie_rag/llm/vllm_client.py`
+
+Implements the first concrete LLM backend.
+
+This client talks to a local vLLM server through its OpenAI-compatible HTTP API.
+
+It currently:
+
+- sends a system prompt and user prompt
+- sends the configured model name
+- passes generation settings such as temperature and max tokens
+- returns the generated assistant text
+
+### `src/howie_rag/answering/__init__.py`
+
+Exports the RAG answer-generation helpers.
+
+### `src/howie_rag/answering/rag_answerer.py`
+
+Implements the first grounded answer-generation layer.
+
+This file currently:
+
+- builds a prompt from:
+  - the question
+  - predicted intent
+  - retrieved chunks
+- adds a grounded system prompt
+- sends that prompt to the configured LLM client
+- returns the generated answer text
+
+This is the first module that turns retrieval output into a real answer instead of only returning matching chunks.
+
 ### `src/howie_rag/intent/evaluation.py`
 
 Provides the minimal evaluation pipeline for intent classification experiments.
@@ -442,6 +485,27 @@ It currently prints:
 - confidence
 - reasoning
 - retrieved chunk matches
+
+### `scripts/run_rag_chatbot.py`
+
+Small CLI script for running the current LLM-backed RAG flow.
+
+Usage:
+
+```bash
+python scripts/run_rag_chatbot.py "What trend do we see in student mobility?" path/to/documents
+```
+
+It currently:
+
+- runs the existing pipeline
+- sends retrieved context to the local vLLM server
+- prints the final generated answer
+
+Configuration is environment-based:
+
+- `HOWIE_LLM_BASE_URL`
+- `HOWIE_LLM_MODEL`
 
 ### `tests/test_project_setup.py`
 
@@ -525,6 +589,15 @@ It currently checks:
 1. the pipeline returns an intent plus retrieval matches for a relevant query
 2. the pipeline handles queries with no retrieval matches cleanly
 
+### `tests/test_rag_answerer.py`
+
+Tests the first LLM-backed answer-generation layer.
+
+It currently checks:
+
+1. the RAG prompt contains the question, intent, and source chunks
+2. the answerer calls the LLM client with the expected parameters
+
 ## Why This Structure Is Useful
 
 This setup already supports an experiment comparing different classifiers because the interface is modular.
@@ -580,15 +653,16 @@ What exists now:
 - a minimal chunking module
 - a minimal keyword-based retrieval module
 - a minimal end-to-end chatbot pipeline
+- a modular LLM client layer
+- a first RAG answer-generation layer
 - automated tests for classification and evaluation
-- automated tests for ingestion, chunking, retrieval, and pipeline assembly
+- automated tests for ingestion, chunking, retrieval, pipeline assembly, and answer generation
 - a synthetic intent dataset with train/dev/test splits
 
 What does not exist yet:
 
 - reranking
 - vector database integration
-- LLM answer generation
 - API
 - UI
 - answer-quality evaluation
