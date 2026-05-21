@@ -47,3 +47,39 @@ def test_unknown_intent() -> None:
     classifier = RuleBasedIntentClassifier()
     result = classifier.classify("Hello there")
     assert result.intent == IntentLabel.UNKNOWN
+
+
+def test_trend_pattern_intent() -> None:
+    classifier = RuleBasedIntentClassifier()
+    result = classifier.classify("What trend do we see in enrollment over time?")
+    assert result.intent == IntentLabel.TREND_PATTERN
+
+
+def test_explanation_intent() -> None:
+    classifier = RuleBasedIntentClassifier()
+    result = classifier.classify("Why did mobility rates decrease?")
+    assert result.intent == IntentLabel.EXPLANATION
+
+
+def test_source_seeking_intent() -> None:
+    classifier = RuleBasedIntentClassifier()
+    result = classifier.classify("Which study reported this?")
+    assert result.intent == IntentLabel.SOURCE_SEEKING
+
+
+def test_interpretation_intent() -> None:
+    classifier = RuleBasedIntentClassifier()
+    result = classifier.classify("What do these findings imply for policy?")
+    assert result.intent == IntentLabel.INTERPRETATION
+
+
+def test_decision_support_intent() -> None:
+    classifier = RuleBasedIntentClassifier()
+    result = classifier.classify("Which intervention seems most effective to adopt?")
+    assert result.intent == IntentLabel.DECISION_SUPPORT
+
+
+def test_followup_intent() -> None:
+    classifier = RuleBasedIntentClassifier()
+    result = classifier.classify("What about in rural schools?")
+    assert result.intent == IntentLabel.FOLLOWUP
