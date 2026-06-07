@@ -1,7 +1,7 @@
 from typing import List
 
 from howie_rag.llm.base import BaseLLMClient
-from howie_rag.retrieval.keyword_retriever import RetrievalMatch
+from howie_rag.retrieval.base import RetrievalMatch
 
 
 RAG_SYSTEM_PROMPT = (

@@ -6,7 +6,7 @@ import pytest
 sys.path.insert(0, str(Path(__file__).resolve().parents[1] / "src"))
 
 from howie_rag.core.schemas import Chunk
-from howie_rag.retrieval.keyword_retriever import retrieve_chunks
+from howie_rag.retrieval.keyword_retriever import KeywordRetriever, retrieve_chunks
 
 
 def test_retrieve_chunks_returns_best_matches_first() -> None:
@@ -42,3 +42,12 @@ def test_retrieve_chunks_skips_zero_score_chunks() -> None:
 def test_retrieve_chunks_validates_top_k() -> None:
     with pytest.raises(ValueError):
         retrieve_chunks("query", [], top_k=0)
+
+
+def test_keyword_retriever_class_matches_function_output() -> None:
+    chunks = [Chunk(chunk_id="1", doc_id="doc-1", text="student mobility and funding", metadata={})]
+
+    class_matches = KeywordRetriever().retrieve("student mobility", chunks, top_k=1)
+    function_matches = retrieve_chunks("student mobility", chunks, top_k=1)
+
+    assert class_matches == function_matches

@@ -42,6 +42,11 @@ The next module splits `Document` objects into smaller `Chunk` objects using a s
 
 The next module retrieves the most relevant chunks for a query using a simple keyword-overlap score.
 
+The retrieval layer is now modular and currently supports:
+
+- `keyword`
+- `bm25`
+
 ## Step 5: Minimal chatbot flow
 
 The next module connects intent classification, document loading, chunking, and retrieval into one simple end-to-end chatbot pipeline.
@@ -50,6 +55,7 @@ Example command:
 
 ```bash
 python scripts/run_simple_chatbot.py "What trend do we see in student mobility?" path/to/documents
+python scripts/run_simple_chatbot.py "What trend do we see in student mobility?" path/to/documents bm25
 ```
 
 ## Step 6: LLM-backed RAG answering
@@ -65,4 +71,5 @@ Example command:
 
 ```bash
 python scripts/run_rag_chatbot.py "What trend do we see in student mobility?" path/to/documents
+python scripts/run_rag_chatbot.py "What trend do we see in student mobility?" path/to/documents bm25
 ```

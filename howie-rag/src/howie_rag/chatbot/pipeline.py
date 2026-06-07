@@ -4,7 +4,8 @@ from typing import List, Optional
 from howie_rag.chunking.text_chunker import chunk_documents
 from howie_rag.ingestion.text_loader import load_text_documents
 from howie_rag.intent.rule_based import RuleBasedIntentClassifier
-from howie_rag.retrieval.keyword_retriever import RetrievalMatch, retrieve_chunks
+from howie_rag.retrieval.base import RetrievalMatch
+from howie_rag.retrieval.factory import create_retriever
 
 
 @dataclass
@@ -22,13 +23,15 @@ def run_simple_chatbot(
     chunk_size: int = 300,
     overlap: int = 50,
     top_k: int = 3,
+    retriever_name: str = "keyword",
 ) -> ChatbotResponse:
     classifier = RuleBasedIntentClassifier()
     intent_result = classifier.classify(question)
 
     documents = load_text_documents(documents_dir)
     chunks = chunk_documents(documents, chunk_size=chunk_size, overlap=overlap)
-    retrieval_matches = retrieve_chunks(question, chunks, top_k=top_k)
+    retriever = create_retriever(retriever_name)
+    retrieval_matches = retriever.retrieve(question, chunks, top_k=top_k)
 
     return ChatbotResponse(
         question=question,
